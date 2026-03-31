@@ -20,6 +20,7 @@
       background: rgba(0,0,0,0.5);
       position: sticky;
       top: 0;
+      z-index: 10;
     }
 
     nav a {
@@ -37,20 +38,31 @@
       height: 90vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       text-align: center;
-      background: url('hero.heic') center/cover no-repeat;
+      padding-top: 120px;
+
+      /* градиент + картинка */
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2)),
+        url('hero.heic') center/cover no-repeat;
     }
 
     .hero h1 {
       font-size: 48px;
       margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000;
     }
 
     .hero p {
       font-size: 18px;
-      opacity: 0.8;
+      opacity: 0.9;
     }
 
     .section {
@@ -93,6 +105,40 @@
       font-size: 14px;
       opacity: 0.7;
     }
+
+    /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+
+      nav a {
+        margin: 0 8px;
+        font-size: 14px;
+      }
+
+      .hero {
+        height: auto;
+        padding: 80px 20px;
+
+        background:
+          linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2)),
+          url('hero.jpg') center/contain no-repeat;
+        background-color: #0f172a;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .section {
+        padding: 40px 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -133,7 +179,7 @@
 <section id="contact" class="section">
   <h2>Связаться</h2>
   <p>Напиши мне в Telegram</p>
-  <a class="btn" href="https://t.me/itsjustkos" target="_blank">Написать в Telegram</a>
+  <a class="btn" href="https://t.me/itsjustkos" target="_blank">Open Telegram</a>
 </section>
 
 <footer>
