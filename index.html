@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ликийская тропа — Галерея</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { margin:0; font-family:'Inter',sans-serif; background:#0b1220; color:#fff; }
+
+    header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:20px 40px; background:rgba(10,15,30,0.6);
+      backdrop-filter:blur(10px); position:sticky; top:0; z-index:10;
+    }
+
+    nav a { margin:0 15px; color:#cbd5f5; text-decoration:none; }
+
+    .hero {
+      height:80vh; display:flex; justify-content:center; align-items:center;
+      text-align:center;
+      background:
+        linear-gradient(to bottom, rgba(5,10,20,0.7), rgba(5,10,20,0.3)),
+        url('hero.heic') center/cover no-repeat;
+    }
+
+    .hero h1 { font-size:48px; }
+
+    .section { padding:60px 30px; }
+
+    .gallery {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+    }
+
+    .card { position:relative; cursor:pointer; }
+
+    .card img {
+      width:100%; height:240px; object-fit:cover;
+      border-radius:16px; transition:0.3s;
+    }
+
+    .card:hover img { transform:scale(1.05); filter:brightness(0.8); }
+
+    .caption {
+      position:absolute; bottom:10px; left:15px; font-size:14px;
+    }
+
+    .btn {
+      display:inline-block;
+      padding:14px 28px;
+      background:linear-gradient(135deg,#38bdf8,#6366f1);
+      border-radius:10px;
+      color:#fff; text-decoration:none;
+      margin-top:20px;
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.95);
+      display:none; justify-content:center; align-items:center;
+      z-index:1000;
+    }
+
+    .lightbox img { max-width:90%; max-height:80%; }
+
+    .close {
+      position:absolute; top:20px; right:30px;
+      font-size:30px; cursor:pointer;
+    }
+
+    .arrow {
+      position:absolute; top:50%; transform:translateY(-50%);
+      font-size:40px; cursor:pointer; padding:10px;
+      opacity:1; transition:0.3s;
+    }
+
+    .arrow.hidden { opacity:0; }
+
+    .prev { left:20px; }
+    .next { right:20px; }
+
+    @media (max-width:768px) {
+      .hero {
+        height:auto; padding:60px 20px;
+        background:
+          linear-gradient(to bottom, rgba(5,10,20,0.7), rgba(5,10,20,0.3)),
+          url('hero.heic') center/contain no-repeat;
+        background-color:#0b1220;
+      }
+      .hero h1 { font-size:32px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>Kos Travel</div>
+  <nav>
+    <a href="#lykia">Ликийская тропа</a>
+    <a href="#kas">Каш</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Ликийская тропа</h1>
+</section>
+
+<section id="lykia" class="section">
+  <h2>Ликийская тропа</h2>
+  <div class="gallery">
+
+    <div class="card"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"><div class="caption">Подпись фото</div></div>
+    <div class="card"><img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d"><div class="caption">Подпись фото</div></div>
+    <div class="card"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"><div class="caption">Подпись фото</div></div>
+
+  </div>
+</section>
+
+<section id="kas" class="section">
+  <h2>Каш</h2>
+  <div class="gallery">
+
+    <div class="card"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470"><div class="caption">Подпись фото</div></div>
+
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <h2>Связаться</h2>
+  <a class="btn" href="https://t.me/itsjustkos" target="_blank">Написать в Telegram</a>
+</section>
+
+<div class="lightbox" id="lightbox">
+  <span class="close" id="close">×</span>
+  <span class="arrow prev" id="prev">❮</span>
+  <img id="lightbox-img">
+  <span class="arrow next" id="next">❯</span>
+</div>
+
+<script>
+const images = Array.from(document.querySelectorAll(".card img"));
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const close = document.getElementById("close");
+const next = document.getElementById("next");
+const prev = document.getElementById("prev");
+
+let currentIndex = 0;
+let hideTimeout;
+
+// preload
+images.forEach(img => {
+  const i = new Image();
+  i.src = img.src;
+});
+
+function showImage(index) {
+  currentIndex = index;
+  lightboxImg.src = images[index].src;
+}
+
+images.forEach((img, index) => {
+  img.addEventListener("click", () => {
+    lightbox.style.display = "flex";
+    showImage(index);
+    showArrows();
+  });
+});
+
+next.onclick = () => { showImage((currentIndex + 1) % images.length); showArrows(); };
+prev.onclick = () => { showImage((currentIndex - 1 + images.length) % images.length); showArrows(); };
+
+close.onclick = () => lightbox.style.display = "none";
+
+lightbox.addEventListener("click", e => {
+  if (e.target === lightbox) lightbox.style.display = "none";
+});
+
+// keyboard
+window.addEventListener("keydown", e => {
+  if (lightbox.style.display === "flex") {
+    if (e.key === "ArrowRight") next.onclick();
+    if (e.key === "ArrowLeft") prev.onclick();
+    if (e.key === "Escape") lightbox.style.display = "none";
+  }
+});
+
+// swipe
+let startX = 0;
+lightbox.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+lightbox.addEventListener("touchend", e => {
+  let endX = e.changedTouches[0].clientX;
+  if (startX - endX > 50) next.onclick();
+  if (endX - startX > 50) prev.onclick();
+});
+
+// auto-hide arrows
+function showArrows() {
+  next.classList.remove("hidden");
+  prev.classList.remove("hidden");
+  clearTimeout(hideTimeout);
+  hideTimeout = setTimeout(() => {
+    next.classList.add("hidden");
+    prev.classList.add("hidden");
+  }, 2000);
+}
+
+lightbox.addEventListener("mousemove", showArrows);
+lightbox.addEventListener("touchstart", showArrows);
+
+</script>
+
+</body>
+</html>
